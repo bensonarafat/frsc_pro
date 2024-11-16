@@ -1,5 +1,6 @@
 <script lang="ts">
-import { supabase } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js';
+import { supabase } from '../lib/appsupabase';
 
 export default {
     name: "LoginView",
@@ -7,7 +8,7 @@ export default {
         return {
             email: '', 
             password: '', 
-            user: null, 
+            user: null as User | null, 
             error: null, 
             loading: false, 
         }

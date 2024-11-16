@@ -1,6 +1,6 @@
 <script lang="ts">
 import HeaderComponent from '../components/HeaderComponent.vue';
-import { supabase } from '@/lib/supabase' 
+import { supabase } from '../lib/appsupabase';
 export default  {
     name: "NewView", 
     components: {

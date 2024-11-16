@@ -1,5 +1,5 @@
 <script lang="ts">
-import { supabase } from '@/lib/supabase' 
+import { supabase } from '../lib/appsupabase';
 import HeaderComponent from '../components/HeaderComponent.vue';
 export default {
     name: "DashboardView", 
@@ -16,8 +16,8 @@ export default {
                 '3': 'Equipment and Vehicle Maintenance Violations',
                 '4': 'Road Infrastructure Violations',
                 '5': 'Road Infrastructure Violations'
-            },
-            data: [],
+            } as any,
+            data: [] as any,
         }
     }, 
     async created () {

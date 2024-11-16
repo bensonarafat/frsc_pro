@@ -1,6 +1,6 @@
 <script lang="ts">
 import HeaderComponent from '../components/HeaderComponent.vue';
-import { supabase } from '@/lib/supabase' 
+import { supabase } from '../lib/appsupabase';
 
 export default {
     name: "EditView",
@@ -14,14 +14,14 @@ export default {
             points: '',
             penalty: 0,
             category: '',
-            error: '',
+            error: null as string | null,
             loading: false,
             success: false
         }
     },
     async created() {
         // Get the ID from route params
-        const id = this.$route.params.id;
+        const id = this.$route.params.id as any;
         await this.fetchProduct(id)
     },
     methods: {

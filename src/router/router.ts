@@ -5,7 +5,7 @@ import CategoryView from '../pages/category.vue';
 import NewView from '../pages/new.vue'; 
 import EditView from '../pages/edit.vue';
 
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/appsupabase';
 
 const routes= [
     {path : "/", component: LoginView, name: "login"}, 
@@ -29,6 +29,7 @@ router.beforeEach(async (to, from, next ) => {
         }else{
             next()
         }
+        from;
     }else {
         next()
     }
