@@ -303,7 +303,6 @@ export default {
                             <option value="2">Administrative and Compliance Violation</option>
                             <option value="3">Equipment and Vehicle Maintenance Violations</option>
                             <option value="4">Road Infrastructure Violations</option>
-                            <option value="5">Road Infrastructure Violations</option>
                         </select>
                     </div>
 

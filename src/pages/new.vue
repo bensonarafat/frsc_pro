@@ -246,7 +246,6 @@ export default  {
                         <option value="2">Administrative and Compliance Violation</option>
                         <option value="3">Equipment and Vehicle Maintenance Violations</option>
                         <option value="4">Road Infrastructure Violations</option>
-                        <option value="5">Road Infrastructure Violations</option>
                     </select>
                 </div>
                 <button type="submit" @click="createNew" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" :disabled="loading">

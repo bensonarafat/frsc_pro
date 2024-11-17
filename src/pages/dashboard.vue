@@ -15,7 +15,6 @@ export default {
                 '2': 'Administrative and Compliance Violation',
                 '3': 'Equipment and Vehicle Maintenance Violations',
                 '4': 'Road Infrastructure Violations',
-                '5': 'Road Infrastructure Violations'
             } as any,
             data: [] as any,
         }
