@@ -16,7 +16,6 @@ export default  {
             error: null as any, 
             loading: false, 
             success: false, 
-            // New image-related data properties
             imageFile: null as File | null,
             imagePreview: '',
             imageUrl: '',
