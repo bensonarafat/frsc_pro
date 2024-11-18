@@ -1,8 +1,8 @@
 <script lang="ts">
-import HeaderComponent from '../components/HeaderComponent.vue';
-import { supabase } from '../lib/appsupabase';
+import HeaderComponent from '../../components/HeaderComponent.vue';
+import { supabase } from '../../lib/appsupabase';
 export default  {
-    name: "NewView", 
+    name: "ViolationNewView", 
     components: {
         HeaderComponent,
     },
@@ -129,12 +129,12 @@ export default  {
 
                    // Redirect to list view after short delay
                 setTimeout(() => {
-                    this.$router.push('/dashboard')  // Adjust route as needed
+                    this.$router.push('/violation')  // Adjust route as needed
                 }, 1500)
 
             } catch (err: any) {
                 this.error = err.message
-                console.error('Error creating products:', err.message)
+                console.error('Error creating violation:', err.message)
             } finally {
                 this.loading = false
             }
@@ -170,7 +170,7 @@ export default  {
     <div class="max-w-sm mx-auto">
 
         <div class="mb-10 flex justify-center">
-            <h2>Create New</h2>
+            <h2>Create New Violation</h2>
         </div>
             <!-- Error -->
             <div v-if="error" class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
@@ -185,7 +185,7 @@ export default  {
 
             <form class="space-y-5" @submit.prevent="createNew">
                 <div class="mb-5">
-                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Tick Infraingement</label>
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
                     <input type="text" v-model="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required :disabled="loading"/>
                 </div>
                 <div class="mb-5">

@@ -1,22 +1,34 @@
-import { createMemoryHistory, createRouter } from 'vue-router' 
+import { createWebHistory, createRouter } from 'vue-router' 
 import DashboardView from '../pages/dashboard.vue';
 import LoginView from '../pages/login.vue';
-import CategoryView from '../pages/category.vue';
-import NewView from '../pages/new.vue'; 
-import EditView from '../pages/edit.vue';
+// Product View 
+import ProductEditView from '../pages/product/edit.vue'
+import ProductNewView from '../pages/product/new.vue'
+import ProductView from '../pages/product/index.vue'
+
+// Violation View 
+import ViolationEditView from '../pages/violation/edit.vue'
+import ViolationNewView from '../pages/violation/new.vue'
+import ViolationView from '../pages/violation/index.vue'
 
 import { supabase } from '../lib/appsupabase';
 
 const routes= [
     {path : "/", component: LoginView, name: "login"}, 
     {path: "/dashboard", component: DashboardView, name: "dashboard", meta: {requiresAuth: true}},
-    {path: "/category", component: CategoryView, name: "category",meta: {requiresAuth: true}},  
-    {path: "/new", component: NewView, name: "new", meta: {requiresAuth: true}}, 
-    {path: "/edit/:id", component: EditView, name: "edit", meta: {requiresAuth: true}}
+
+    {path: "/product", component: ProductView, meta: {requiresAuth: true}},
+    {path: "/product/new", component: ProductNewView, meta: {requiresAuth: true}},
+    {path: "/product/edit/:id", component: ProductEditView, meta: {requiresAuth: true}},
+
+    {path: "/violation", component: ViolationView, meta: {requiresAuth: true}},
+    {path: "/violation/new", component: ViolationNewView, meta: {requiresAuth: true}},
+    {path: "/violation/edit/:id", component: ViolationEditView, meta: {requiresAuth: true}},
+
 ];
 
 const router = createRouter({
-    history: createMemoryHistory(), 
+    history: createWebHistory(), 
     routes,
 });
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-import HeaderComponent from '../components/HeaderComponent.vue';
-import { supabase } from '../lib/appsupabase';
+import HeaderComponent from '../../components/HeaderComponent.vue';
+import { supabase } from '../../lib/appsupabase';
 
 export default {
-    name: "EditView",
+    name: "ViolationEditView",
     components: {
         HeaderComponent,
     },
@@ -188,7 +188,7 @@ export default {
 
                 // Redirect to list view after short delay
                 setTimeout(() => {
-                    this.$router.push('/dashboard')
+                    this.$router.push('/violation')
                 }, 1500)
 
             } catch (err: any) {
@@ -213,11 +213,10 @@ export default {
 <template>
     <div>
         <HeaderComponent />
-
         <div class="mt-10">
             <div class="max-w-sm mx-auto">
                 <div class="mb-10 flex justify-center">
-                    <h2>Edit Product</h2>
+                    <h2>Edit Violation</h2>
                 </div>
 
                 <!-- Error Alert -->
@@ -234,13 +233,13 @@ export default {
                 <!-- Success Alert -->
                 <div v-if="success" class="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
                     <div>
-                        <span class="font-medium">Success!</span> Product updated successfully.
+                        <span class="font-medium">Success!</span> Violation updated successfully.
                     </div>
                 </div>
 
                 <form class="space-y-5" @submit.prevent="updateProduct">
                     <div class="mb-5">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Tick Infringement</label>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
                         <input type="text" v-model="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required :disabled="loading"/>
                     </div>
 
