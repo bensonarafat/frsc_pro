@@ -42,7 +42,8 @@ export default {
                 this.loading = true;
                 const { data, error } = await supabase
                     .from('products')
-                    .select('*')
+                    .select('*') 
+                    .eq('type', 'violation')
                     .order('created_at', { ascending: false });
                 if (error) throw error;
                 this.data = data;
