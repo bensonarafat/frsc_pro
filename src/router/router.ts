@@ -11,6 +11,10 @@ import ViolationEditView from '../pages/violation/edit.vue'
 import ViolationNewView from '../pages/violation/new.vue'
 import ViolationView from '../pages/violation/index.vue'
 
+// Users View 
+import UserView from '../pages/user/index.vue'
+import UserAdd from '../pages/user/add.vue'
+
 import { supabase } from '../lib/appsupabase';
 
 const routes= [
@@ -24,6 +28,10 @@ const routes= [
     {path: "/violation", component: ViolationView, meta: {requiresAuth: true}},
     {path: "/violation/new", component: ViolationNewView, meta: {requiresAuth: true}},
     {path: "/violation/edit/:id", component: ViolationEditView, meta: {requiresAuth: true}},
+
+    {path: "/users", component: UserView, meta: {requiresAuth: true}},
+    {path: "/users/add", component: UserAdd, meta: {requiresAuth: true}},
+
 
 ];
 
