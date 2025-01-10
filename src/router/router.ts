@@ -14,6 +14,21 @@ import ViolationView from '../pages/violation/index.vue'
 // Users View 
 import UserView from '../pages/user/index.vue'
 import UserAdd from '../pages/user/add.vue'
+import UserEdit from '../pages/user/edit.vue'
+
+
+import ConfigView from '../pages/config/index.vue'
+import BottomNavigation from '../pages/config/bottom_navigation.vue' 
+import AppLogo from '../pages/config/app_logo.vue' 
+import PageHeading from '../pages/config/page_headings.vue'
+
+import AdminView from '../pages/admin/index.vue';
+import ManageCommandView from '../pages/admin/commands/manage.vue';
+import EditCommandView from '../pages/admin/commands/edit.vue';
+import AddCommandView from '../pages/admin/commands/add.vue';
+
+import ReportView from '../pages/admin/reports.vue'
+
 
 import { supabase } from '../lib/appsupabase';
 
@@ -31,7 +46,20 @@ const routes= [
 
     {path: "/users", component: UserView, meta: {requiresAuth: true}},
     {path: "/users/add", component: UserAdd, meta: {requiresAuth: true}},
+    {path: "/users/edit/:id", component: UserEdit, meta: {requiresAuth: true}},
 
+    {path: "/config", component: ConfigView, meta: {requiresAuth: true}},
+    {path: "/config/bottom-navigation", component: BottomNavigation, meta: {requiresAuth: true}},
+    {path: "/config/app-logo", component: AppLogo, meta: {requiresAuth: true}},
+    {path: "/config/page-heading", component: PageHeading, meta: {requiresAuth: true}},
+
+    // admin
+    {path: "/admin", component: AdminView, meta: {requiresAuth: true}},
+    {path: "/admin/command", component: ManageCommandView,  meta: {requiresAuth: true}},
+    {path: "/admin/command/edit/:id", component: EditCommandView, meta: {requiresAuth: true}},
+    {path: "/admin/command/add", component: AddCommandView,  meta: {requiresAuth: true}},
+
+    {path: "/admin/reports", component: ReportView,  meta: {requiresAuth: true}},
 
 ];
 

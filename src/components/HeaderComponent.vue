@@ -3,11 +3,29 @@ import { supabase } from '../lib/appsupabase';
 
 export default {
     name: "HeaderComponent",
-    data() {
+    data() { 
         return {
-            isMenuOpen: false
+            isMenuOpen: false, 
+            role: "user",
         }
     },
+    async created () {
+        // Check if there's an existing session
+        const {data: {session}} = await supabase.auth.getSession();
+        if(session) {
+            const {data: userdata, error: dbError} = await supabase.from('users').select().eq("uuid", session.user.id);
+                if(dbError) {
+                  await supabase.auth.signOut();
+                  // logout the user 
+                  throw dbError
+            };
+            if(userdata[0]['role'] == "admin"){
+                this.role = "admin";
+            }else{
+                this.role = "user";
+            }
+        }
+    }, 
     methods: {
         toggleMenu() {
             this.isMenuOpen = !this.isMenuOpen;
@@ -52,17 +70,30 @@ export default {
                 id="navbar-default"
             >
                 <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    <li>
+                    <li v-if="role != 'admin'">
                         <RouterLink to="/dashboard" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Dashboard</RouterLink>
                     </li>
-                    <li>
+
+                    <li v-if="role != 'admin'">
                         <RouterLink to="/violation" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Violations</RouterLink>
                     </li>
-                    <li>
+                    <li v-if="role != 'admin'">
                         <RouterLink to="/product" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Products</RouterLink>
                     </li>
-                    <li>
+                    <li v-if="role == 'admin'">
+                        <RouterLink to="/admin" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Home</RouterLink>
+                    </li>
+                    <li v-if="role == 'admin'">
+                        <RouterLink to="/admin/reports" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Reports</RouterLink>
+                    </li>
+                    <li v-if="role == 'admin'">
+                        <RouterLink to="/admin/command" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Commands</RouterLink>
+                    </li>
+                    <li v-if="role == 'admin'">
                         <RouterLink to="/users" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Users</RouterLink>
+                    </li>
+                    <li v-if="role == 'admin'">
+                        <RouterLink to="/config" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0" @click="isMenuOpen = false">Config</RouterLink>
                     </li>
                     <li>
                         <a href="javascript:void(0)" @click="signOut" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0">Logout</a>

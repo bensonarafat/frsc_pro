@@ -19,7 +19,19 @@ export default {
         const {data: {session}} = await supabase.auth.getSession();
         if(session) {
             this.user = session.user;
-            this.$router.push('/dashboard')
+            const {data: userdata, error: dbError} = await supabase.from('users').select().eq("uuid", this.user.id);
+                if(dbError) {
+                  await supabase.auth.signOut();
+                  // logout the user 
+                  throw dbError
+            };
+            if(userdata[0]['role'] == "admin"){
+                // Redirect to dashbaord 
+                this.$router.push("/admin")
+                }else{
+                // Redirect to dashbaord 
+                this.$router.push("/dashboard")
+              }
         }
     }, 
     methods: {
@@ -32,13 +44,24 @@ export default {
                 password: this.password,
                 })
                 if (signInError) throw signInError
-                this.user = data.user 
                 
+                const {data: userdata, error: dbError} = await supabase.from('users').select().eq("uuid", data.user.id);
+                if(dbError) {
+                  await supabase.auth.signOut();
+                  // logout the user 
+                  throw dbError
+                };
+                this.user = data.user 
                 // Save session in local Storage (Supabase does this automatically, but you can add additional data) 
                 localStorage.setItem('user', JSON.stringify(data.user)); 
-
+                if(userdata[0]['role'] == "admin"){
+                // Redirect to dashbaord 
+                this.$router.push("/admin")
+                }else{
                 // Redirect to dashbaord 
                 this.$router.push("/dashboard")
+                }
+
             } catch (err: any) {
                 this.error = err.message
             }
@@ -64,17 +87,16 @@ export default {
         <span class="font-medium">Danger alert!</span> {{ error }}
       </div>
     </div>
-
       <div class="mb-5">
         <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email Address</label>
-        <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@example.com" required />
+        <input type="email" autocomplete="" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@example.com" required />
       </div>
       <div class="mb-5">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-        <input type="password"  v-model="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+        <input type="password" autocomplete=""  v-model="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
       </div>
       <button type="submit" @click="signIn" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</button>
-  </div>
+    </div>
   </div>
 
 </template>

@@ -1,9 +1,8 @@
-
 <script lang="ts">
-import HeaderComponent from '../../components/HeaderComponent.vue';
-import { supabase } from '../../lib/appsupabase';
+import { supabase } from '../../../lib/appsupabase';
+import HeaderComponent from '../../../components/HeaderComponent.vue';
 export default {
-    name: "UserView", 
+    name: "ManageCommandView", 
     components: {
         HeaderComponent,
     },
@@ -48,9 +47,9 @@ export default {
                 throw new Error('No active session. Please log in.');
             }
 
-            // Delete user from the 'users' table first
+            // Delete user from the 'commands' table first
             const { error: deleteError } = await supabase
-                .from('users')
+                .from('commands')
                 .delete()
                 .eq('id', id);
 
@@ -62,7 +61,7 @@ export default {
             await this.fetchData();
 
             // Optional: Show success message
-            alert('User deleted successfully');
+            alert('Commands deleted successfully');
 
         } catch (err: any) {
             console.error('Error deleting user:', err.message);
@@ -77,7 +76,7 @@ export default {
             try {
                 this.loading = true;
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('commands')
                     .select('*') 
                     .order('created_at');
                 if (error) throw error;
@@ -93,13 +92,12 @@ export default {
 }
 </script>
 <template>
-       <div>
-    <HeaderComponent/>
-
-    <div v-if="!loading">
+    <div>
+        <HeaderComponent/>
+        <div v-if="!loading">
         <div class="container mx-auto px-4 mb-5">
             <div></div>
-            <RouterLink to="/users/add" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create New</RouterLink>
+            <RouterLink to="/admin/command/add" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create New</RouterLink>
         </div>
         <div class="container mx-auto px-4">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -110,25 +108,13 @@ export default {
                                 ID
                             </td>
                             <td scope="col" class="px-6 py-3">
-                                Full name
+                                Type
+                            </td>
+                            <td scope="col" class="px-6 py-3">
+                                Name
                             </td>
                             <th scope="col" class="px-6 py-3">
-                                Email / Phone 
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                FRSC Headquarters
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Sector Command Code
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Zonal Command Code
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Unit Command Code
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Personal Code
+                                Code
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Actions
@@ -138,7 +124,7 @@ export default {
                     <tbody>
                         <tr v-if="data.length === 0">
                             <td colspan="6" class="px-6 py-4 text-center">
-                                No user found
+                                No commands found
                             </td>
                         </tr>
                         <tr 
@@ -147,16 +133,12 @@ export default {
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50"
                         >
                             <td class="px-6 py-4">{{ dat.id }}</td>
-                            <td class="px-6 py-4">{{ dat.fullname }}</td>
-                            <td class="px-6 py-4">{{ dat.email ?? dat.phone  }}</td>
-                            <td class="px-6 py-4">{{ dat.headquarter_code  }}</td>
-                            <td class="px-6 py-4">{{ dat.sector_code  }}</td>
-                            <td class="px-6 py-4">{{ dat.zonal_code  }}</td>
-                            <td class="px-6 py-4">{{ dat.unit_code  }}</td>
-                            <td class="px-6 py-4">{{ dat.personal_code  }}</td>
+                            <td class="px-6 py-4">{{ dat.type }}</td>
+                            <td class="px-6 py-4">{{ dat.name }}</td>
+                            <td class="px-6 py-4">{{ dat.code }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex space-x-4">
-                                    <RouterLink :to="'/users/edit/' + dat.id "
+                                    <RouterLink :to="'/admin/command/edit/' + dat.id "
                                         
                                         class="font-medium text-red-600 dark:text-red-500 hover:underline"
                                     >
@@ -186,6 +168,5 @@ export default {
             </div>
         </div>
     </div>
-
-   </div>
+    </div>
 </template>
