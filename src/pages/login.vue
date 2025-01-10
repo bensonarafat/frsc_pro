@@ -35,38 +35,66 @@ export default {
         }
     }, 
     methods: {
-        async signIn() {
-            this.loading = true;
-            this.error = null;
-            try {
-                const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    async signIn() {
+        this.loading = true;
+        this.error = null;
+
+        try {
+            // Try email sign in first
+            let { data: emailAuth, error: emailError } = await supabase.auth.signInWithPassword({
                 email: this.email,
                 password: this.password,
-                })
-                if (signInError) throw signInError
-                
-                const {data: userdata, error: dbError} = await supabase.from('users').select().eq("uuid", data.user.id);
-                if(dbError) {
-                  await supabase.auth.signOut();
-                  // logout the user 
-                  throw dbError
-                };
-                this.user = data.user 
-                // Save session in local Storage (Supabase does this automatically, but you can add additional data) 
-                localStorage.setItem('user', JSON.stringify(data.user)); 
-                if(userdata[0]['role'] == "admin"){
-                // Redirect to dashbaord 
-                this.$router.push("/admin")
-                }else{
-                // Redirect to dashbaord 
-                this.$router.push("/dashboard")
-                }
+            });
 
-            } catch (err: any) {
-                this.error = err.message
+            // Try phone sign in if email fails
+            let { data: phoneAuth, error: phoneError } = emailError ? 
+                await supabase.auth.signInWithPassword({
+                    phone: this.email,
+                    password: this.password,
+                }) : { data: emailAuth, error: null };
+
+            // If both authentication methods fail
+            if (emailError && phoneError) {
+                throw new Error(phoneError.message || emailError.message);
             }
+
+            const user = phoneAuth?.user || emailAuth?.user;
+            
+            if (!user?.id) {
+                throw new Error('Authentication successful but user data is missing');
+            }
+
+            // Fetch user data from database
+            const { data: userData, error: dbError } = await supabase
+                .from('users')
+                .select()
+                .eq("uuid", user.id)
+                .single();
+
+            if (dbError) {
+                await supabase.auth.signOut();
+                throw new Error('Failed to fetch user data: ' + dbError.message);
+            }
+
+            if (!userData) {
+                await supabase.auth.signOut();
+                throw new Error('User data not found in database');
+            }
+
+            // Store user data
+            this.user = user;
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Navigate based on role
+            this.$router.push(userData.role === 'admin' ? '/admin' : '/dashboard');
+
+        } catch (error: any) {
+            this.error = error.message;
+        } finally {
+            this.loading = false;
         }
     }
+}
 }
 </script>
 
@@ -88,8 +116,8 @@ export default {
       </div>
     </div>
       <div class="mb-5">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email Address</label>
-        <input type="email" autocomplete="" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@example.com" required />
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email Address / Phone Number</label>
+        <input type="text" autocomplete="" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@example.com" required />
       </div>
       <div class="mb-5">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
